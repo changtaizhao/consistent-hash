@@ -33,6 +33,20 @@ public class Server {
      */
     private Map<String, String> dataMap = null;
 
+    /**
+     * 取模hash构造方法
+     * @param name
+     */
+    public Server(String name){
+        this.name = name;
+        this.dataMap = new ConcurrentHashMap<>();
+    }
+
+    /**
+     * 一致性hash构造方法
+     * @param name
+     * @param nodeNumber
+     */
     public Server(String name, Integer nodeNumber){
         this.name = name;
         this.nodeNumber = nodeNumber;
@@ -41,7 +55,7 @@ public class Server {
 
         //初始化虚拟节点
         for (Integer i = 0; i < nodeNumber; i++) {
-            Node node = new Node(name + " " + i, this);
+            Node node = new Node(name + " : " + i, this);
             nodeList.add(node);
         }
     }

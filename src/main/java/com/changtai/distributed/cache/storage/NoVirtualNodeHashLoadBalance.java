@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * 一致性hash
+ * 没有虚拟节点一致性hash
  *
  * @author zhaoct
  * @date 2020-07-07 9:25
  */
-public class ConsistentHashLoadBalance implements LoadBalanceStrategy {
+public class NoVirtualNodeHashLoadBalance implements LoadBalanceStrategy {
 
     /**
      * hash 环
@@ -24,7 +24,7 @@ public class ConsistentHashLoadBalance implements LoadBalanceStrategy {
      */
     private HashStrategy hashStrategy;
 
-    public ConsistentHashLoadBalance(List<Server> servers, HashStrategy hashStrategy){
+    public NoVirtualNodeHashLoadBalance(List<Server> servers, HashStrategy hashStrategy){
         this.ring = new TreeMap<>();
         this.hashStrategy = hashStrategy;
         // 创建一致性hash环
@@ -32,11 +32,8 @@ public class ConsistentHashLoadBalance implements LoadBalanceStrategy {
     }
 
     private TreeMap<Integer, Server> buildConsistentHashRing(List<Server> servers) {
-        //添加虚拟节点
         for (Server server : servers) {
-            for (Node node : server.getNodeList()) {
-                ring.put(hashStrategy.getHashCode(node.getName()), server);
-            }
+            ring.put(hashStrategy.getHashCode(server.getName()), server);
         }
         return ring;
     }

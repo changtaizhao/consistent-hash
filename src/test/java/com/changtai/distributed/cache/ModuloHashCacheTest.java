@@ -1,8 +1,7 @@
 package com.changtai.distributed.cache;
 
 import com.changtai.distributed.cache.hash.FnvHash;
-import com.changtai.distributed.cache.hash.JdkHash;
-import com.changtai.distributed.cache.storage.ConsistentHashLoadBalance;
+import com.changtai.distributed.cache.storage.ModuloHashLoadBalance;
 import com.changtai.distributed.cache.storage.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +9,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 缓存测试用例
@@ -17,7 +17,7 @@ import java.util.List;
  * @author zhaoct
  * @date 2020-07-07 15:44
  */
-public class CacheTest {
+public class ModuloHashCacheTest {
 
     private Cache cache;
 
@@ -26,30 +26,27 @@ public class CacheTest {
     @Before
     public void init(){
 
-        //每台服务器虚拟节点个数
-        int nodeNumber = 1000;
-
-        //10台服务器，每个服务器1000个虚拟节点
+        //10台服务器
         servers = Arrays.asList(
-                new Server("服务器1", nodeNumber),
-                new Server("服务器2", nodeNumber),
-                new Server("服务器3", nodeNumber),
-                new Server("服务器4", nodeNumber),
-                new Server("服务器5", nodeNumber),
-                new Server("服务器6", nodeNumber),
-                new Server("服务器7", nodeNumber),
-                new Server("服务器8", nodeNumber),
-                new Server("服务器9", nodeNumber),
-                new Server("服务器10", nodeNumber)
+                new Server("服务器1"),
+                new Server("服务器2"),
+                new Server("服务器3"),
+                new Server("服务器4"),
+                new Server("服务器5"),
+                new Server("服务器6"),
+                new Server("服务器7"),
+                new Server("服务器8"),
+                new Server("服务器9"),
+                new Server("服务器10")
         );
-        cache = new DistributedCache(new ConsistentHashLoadBalance(servers, new JdkHash()));
+        cache = new DistributedCache(new ModuloHashLoadBalance(servers, new FnvHash()));
     }
 
     @Test
     public void testCache(){
         //100w数据测试
         for(int i=0; i<1000000; i++){
-            cache.put("key" + i, "data" + i);
+            cache.put(UUID.randomUUID().toString(), "data" + i);
         }
     }
 

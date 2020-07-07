@@ -50,4 +50,8 @@ public class Node {
     public void incrementCount(){
         count.incrementAndGet();
     }
+
+    public Integer getCount() {
+        return count.get();
+    }
 }
