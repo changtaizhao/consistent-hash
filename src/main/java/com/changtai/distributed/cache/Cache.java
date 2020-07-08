@@ -1,5 +1,7 @@
 package com.changtai.distributed.cache;
 
+import com.changtai.distributed.cache.storage.Server;
+
 /**
  * Cache 接口
  *
@@ -21,4 +23,16 @@ public interface Cache {
      * @return
      */
     String get(String key);
+
+    /**
+     * 添加一台服务器
+     * @param server
+     */
+    void addServer(Server server);
+
+    /**
+     * 删除一台服务器
+     * @param server
+     */
+    void removeServer(Server server);
 }

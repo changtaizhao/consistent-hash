@@ -15,4 +15,16 @@ public interface LoadBalanceStrategy {
      */
     Server getServer(String key);
 
+    /**
+     * 添加一台服务器
+     * @param server
+     */
+    void addServer(Server server);
+
+    /**
+     * 删除一台服务器
+     * @param server
+     */
+    void removeServer(Server server);
+
 }

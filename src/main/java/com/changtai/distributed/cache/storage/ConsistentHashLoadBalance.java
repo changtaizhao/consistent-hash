@@ -24,11 +24,17 @@ public class ConsistentHashLoadBalance implements LoadBalanceStrategy {
      */
     private HashStrategy hashStrategy;
 
+    /**
+     * 服务器列表
+     */
+    private List<Server> servers;
+
     public ConsistentHashLoadBalance(List<Server> servers, HashStrategy hashStrategy){
         this.ring = new TreeMap<>();
         this.hashStrategy = hashStrategy;
+        this.servers = servers;
         // 创建一致性hash环
-        this.buildConsistentHashRing(servers);
+        this.buildConsistentHashRing(this.servers);
     }
 
     private TreeMap<Integer, Server> buildConsistentHashRing(List<Server> servers) {
@@ -51,5 +57,23 @@ public class ConsistentHashLoadBalance implements LoadBalanceStrategy {
         }
 
         return entry.getValue();
+    }
+
+    @Override
+    public void addServer(Server server) {
+        servers.add(server);
+        //添加到环上
+        for (Node node : server.getNodeList()) {
+            ring.put(hashStrategy.getHashCode(node.getName()), server);
+        }
+    }
+
+    @Override
+    public void removeServer(Server server) {
+        servers.remove(server);
+        //从环上删除
+        for (Node node : server.getNodeList()) {
+            ring.remove(hashStrategy.getHashCode(node.getName()));
+        }
     }
 }

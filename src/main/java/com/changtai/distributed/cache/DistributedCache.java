@@ -30,4 +30,14 @@ public class DistributedCache implements Cache{
         //System.out.println(" key: " + key + " 从缓存服务器读取 " + server.getName());
         return server.get(key);
     }
+
+    @Override
+    public void addServer(Server server) {
+        loadBalanceStrategy.addServer(server);
+    }
+
+    @Override
+    public void removeServer(Server server) {
+        loadBalanceStrategy.removeServer(server);
+    }
 }

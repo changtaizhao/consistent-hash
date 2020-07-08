@@ -12,7 +12,14 @@ import java.util.List;
  */
 public class ModuloHashLoadBalance implements LoadBalanceStrategy{
 
+    /**
+     * hash 方法
+     */
     private HashStrategy hashStrategy;
+
+    /**
+     * 服务器列表
+     */
     private List<Server> servers;
 
     public ModuloHashLoadBalance(List<Server> servers, HashStrategy hashStrategy){
@@ -23,6 +30,16 @@ public class ModuloHashLoadBalance implements LoadBalanceStrategy{
     @Override
     public Server getServer(String key) {
         return servers.get(hashStrategy.getHashCode(key) % servers.size());
+    }
+
+    @Override
+    public void addServer(Server server) {
+        servers.add(server);
+    }
+
+    @Override
+    public void removeServer(Server server) {
+        servers.remove(server);
     }
 
 }
